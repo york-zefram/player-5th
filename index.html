@@ -31,11 +31,10 @@
         body {
             background-color: #030305;
             color: #fff; margin: 0; 
-            /* 下の余白を少し長めにするため、上側のパディングを調整 */
-            padding: 15px 10px 40px 10px; 
+            /* 調整：全体を少し下に下げる */
+            padding: 45px 5px 5px 5px; 
             font-family: var(--font-main);
-            display: flex; justify-content: center; align-items: center; 
-            min-height: 100vh;
+            display: flex; justify-content: center; align-items: center; min-height: 100vh;
             overflow: hidden;
             touch-action: none;
             position: fixed; width: 100%; height: 100%;
@@ -43,15 +42,16 @@
 
         .player-canvas {
             width: 100%; max-width: 380px; 
-            height: 92vh; /* 90vhから92vhへ、少しだけ長く */
-            max-height: 740px; 
+            height: 96vh; 
+            max-height: 800px;
             background: rgba(15, 15, 25, 0.6); 
             backdrop-filter: blur(40px) saturate(160%);
             -webkit-backdrop-filter: blur(40px) saturate(160%);
             border: 1px solid var(--glass-border); 
             border-top: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 35px;
-            padding: 15px 15px; 
+            /* 調整：下部のパディングを増やしてTEMPO領域を下に広げる */
+            padding: 15px 15px 50px 15px; 
             box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 0 30px rgba(255, 255, 255, 0.02);
             display: flex; flex-direction: column;
             position: relative;
@@ -68,7 +68,7 @@
         }
 
         .header-title { 
-            text-align: center; font-size: 15px;
+            text-align: center; font-size: 16px; 
             font-weight: 900; letter-spacing: 2px; 
             color: var(--neon-blue); margin-bottom: 8px; text-transform: uppercase; flex-shrink: 0;
             animation: slow-pulse-glow 5s infinite ease-in-out;
@@ -78,9 +78,9 @@
             50% { opacity: 1; text-shadow: 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue); }
         }
 
-        .meta-area { display: flex; align-items: center; gap: 10px; flex-shrink: 0; margin-bottom: 5px; height: 80px; }
+        .meta-area { display: flex; align-items: center; gap: 10px; flex-shrink: 0; margin-bottom: 5px; height: 85px; }
         .art-box { 
-            width: 60px; height: 60px; border-radius: 10px; background: #000; 
+            width: 65px; height: 65px; border-radius: 10px; background: #000; 
             border: 1.5px solid rgba(255, 255, 255, 0.1); 
             overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
         }
@@ -91,12 +91,12 @@
         .marquee-container { width: 100%; overflow: hidden; white-space: nowrap; position: relative; margin: 1px 0; }
         .marquee-inner { display: inline-flex; width: max-content; align-items: center; }
         .marquee-content { display: inline-block; white-space: nowrap; }
-        .title-style { font-size: 15px; font-weight: 900; color: #fff; }
-        .artist-style { font-size: 11px; font-weight: 700; color: var(--neon-blue); opacity: 0.8; }
+        .title-style { font-size: 16px; font-weight: 900; color: #fff; }
+        .artist-style { font-size: 12px; font-weight: 700; color: var(--neon-blue); opacity: 0.8; }
         .animate-loop { animation: seamless-marquee 25s linear infinite; }
         @keyframes seamless-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-        #m-time { font-family: var(--font-main); font-size: 15px; font-weight: 900; margin-top: 4px; color: #fff; letter-spacing: 1px; font-variant-numeric: tabular-nums; }
+        #m-time { font-family: var(--font-main); font-size: 16px; font-weight: 900; margin-top: 4px; color: #fff; letter-spacing: 1px; font-variant-numeric: tabular-nums; }
 
         .btn-unified { 
             background: rgba(255,255,255,0.03); border: 1px solid var(--neon-blue); 
@@ -106,41 +106,41 @@
             text-align: center; line-height: 1;
         }
         .btn-unified:active { transform: scale(0.95); background: rgba(0, 242, 255, 0.2); }
-        .btn-select { border-radius: 8px; height: 28px; width: 48px; font-size: 9px; border: 1px solid rgba(0, 242, 255, 0.5); }
+        .btn-select { border-radius: 8px; height: 30px; width: 50px; font-size: 10px; border: 1px solid rgba(0, 242, 255, 0.5); }
 
-        .seek-container { margin: 2px 0 8px 0; flex-shrink: 0; position: relative; padding: 0 20px; }
-        .tag-lane { height: 26px; position: relative; width: 100%; }
+        .seek-container { margin: 2px 0 10px 0; flex-shrink: 0; position: relative; padding: 0 20px; }
+        .tag-lane { height: 28px; position: relative; width: 100%; }
         .ab-tag { 
-            position: absolute; width: 30px; height: 30px; border-radius: 50%; 
+            position: absolute; width: 32px; height: 32px; border-radius: 50%; 
             background: rgba(0, 242, 255, 0.05); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
             border: 1.2px solid var(--neon-blue); display: flex; align-items: center; justify-content: center; 
-            font-size: 13px; font-weight: 900; top: 50%; transform: translate(-50%, -50%); 
+            font-size: 14px; font-weight: 900; top: 50%; transform: translate(-50%, -50%); 
             color: var(--neon-blue); z-index: 100; box-shadow: 0 0 15px var(--neon-blue-glow); cursor: pointer;
         }
 
-        .ab-jump-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 8px; }
+        .ab-jump-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px; }
         #ab-txt { 
-            font-family: var(--font-main); color: var(--neon-blue); font-weight: 900; font-size: 16px; 
-            min-width: 130px; text-align: center; text-shadow: 0 0 15px var(--neon-blue-glow); 
+            font-family: var(--font-main); color: var(--neon-blue); font-weight: 900; font-size: 17px; 
+            min-width: 140px; text-align: center; text-shadow: 0 0 15px var(--neon-blue-glow); 
             font-variant-numeric: tabular-nums; letter-spacing: 1px;
         }
 
-        .main-lane { height: 32px; position: relative; display: flex; align-items: center; cursor: pointer; touch-action: none; }
-        .main-lane-bg { position: absolute; width: 100%; height: 7px; background: rgba(255,255,255,0.08); border-radius: 4px; z-index: 1; }
-        .v-marker { position: absolute; width: 2px; height: 14px; background: #fff; z-index: 20; top: 50%; transform: translate(-50%, -50%); pointer-events: none; }
+        .main-lane { height: 36px; position: relative; display: flex; align-items: center; cursor: pointer; touch-action: none; }
+        .main-lane-bg { position: absolute; width: 100%; height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; z-index: 1; }
+        .v-marker { position: absolute; width: 2px; height: 16px; background: #fff; z-index: 20; top: 50%; transform: translate(-50%, -50%); pointer-events: none; }
         .bar-y { position: absolute; height: 5px; background: var(--neon-blue); z-index: 3; box-shadow: 0 0 20px var(--neon-blue); border-radius: 3px; }
         .bar-w { position: absolute; height: 5px; background: #fff; z-index: 3; opacity: 0.2; border-radius: 3px; }
-        .head-knob { position: absolute; width: 18px; height: 18px; border-radius: 50%; background: #fff; z-index: 30; transform: translateX(-50%); box-shadow: 0 0 15px #fff; pointer-events: none; }
+        .head-knob { position: absolute; width: 20px; height: 20px; border-radius: 50%; background: #fff; z-index: 30; transform: translateX(-50%); box-shadow: 0 0 15px #fff; pointer-events: none; }
         
         .control-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 10px; flex: 1; min-height: 0; margin-bottom: 5px; }
-        .play-col { display: flex; flex-direction: column; align-items: center; justify-content: space-around; padding: 2px 0; }
+        .play-col { display: flex; flex-direction: column; align-items: center; justify-content: space-around; padding: 5px 0; }
         
         .metal-btn-wrap { 
-            aspect-ratio: 1/1; width: 70px; border-radius: 50%; background: var(--metal-grad); padding: 3px; 
+            aspect-ratio: 1/1; width: 75px; border-radius: 50%; background: var(--metal-grad); padding: 3px; 
             box-shadow: 0 10px 20px rgba(0,0,0,0.6); cursor: pointer; position: relative; overflow: hidden; 
             display: flex; align-items: center; justify-content: center; transition: var(--trans);
         }
-        #p-btn { width: 90px; border: 1.5px solid var(--neon-blue); }
+        #p-btn { width: 100px; border: 1.5px solid var(--neon-blue); }
         #p-btn.playing::before { 
             content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; 
             background: conic-gradient(transparent, transparent, var(--neon-blue), transparent); 
@@ -148,20 +148,20 @@
         }
         @keyframes rotate-glow { 100% { transform: rotate(360deg); } }
         .metal-btn-inner { width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #252525, #050505); position: relative; z-index: 1; }
-        .metal-btn-inner svg { width: 32px; height: 32px; fill: var(--neon-blue); filter: drop-shadow(0 0 8px var(--neon-blue-glow)); }
+        .metal-btn-inner svg { width: 35px; height: 35px; fill: var(--neon-blue); filter: drop-shadow(0 0 8px var(--neon-blue-glow)); }
         
-        .tempo-panel { background: rgba(255, 255, 255, 0.04); border-radius: 25px; padding: 10px; border: 1px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between; height: 100%; backdrop-filter: blur(10px); }
-        .tempo-label { font-size: 9px; color: var(--neon-blue); font-weight: 800; letter-spacing: 1px; display: block; margin-bottom: -2px; }
-        .tempo-val-wrapper { color: #fff; font-size: 16px; font-weight: 900; }
-        .tempo-controls { flex: 1; display: flex; gap: 8px; align-items: center; justify-content: center; position: relative; min-height: 0; }
-        .slider-wrapper { position: relative; height: 100%; width: 32px; display: flex; justify-content: center; align-items: center; }
-        .tempo-lane-bg { position: absolute; height: 100%; width: 4px; background: rgba(255,255,255,0.06); border-radius: 4px; z-index: 1; }
+        .tempo-panel { background: rgba(255, 255, 255, 0.04); border-radius: 25px; padding: 12px; border: 1px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between; height: 100%; backdrop-filter: blur(10px); }
+        .tempo-label { font-size: 10px; color: var(--neon-blue); font-weight: 800; letter-spacing: 1px; display: block; margin-bottom: -2px; }
+        .tempo-val-wrapper { color: #fff; font-size: 18px; font-weight: 900; }
+        .tempo-controls { flex: 1; display: flex; gap: 10px; align-items: center; justify-content: center; position: relative; min-height: 0; }
+        .slider-wrapper { position: relative; height: 100%; width: 35px; display: flex; justify-content: center; align-items: center; }
+        .tempo-lane-bg { position: absolute; height: 100%; width: 5px; background: rgba(255,255,255,0.06); border-radius: 4px; z-index: 1; }
         .t-marker { position: absolute; height: 2px; width: 15px; background: rgba(255,255,255,0.4); z-index: 2; left: 50%; transform: translateX(-50%); }
-        .v-slider { -webkit-appearance: none; appearance: none; position: absolute; top: 50%; left: 50%; width: 100px; height: 32px; background: transparent; outline: none; transform: translate(-50%, -50%) rotate(-90deg); margin: 0; z-index: 10; cursor: pointer; }
-        .v-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 0 15px #fff; }
-        .btn-reset-glass { width: 100%; padding: 8px; border-radius: 12px; font-size: 9px; font-weight: 700; letter-spacing: 1px; border: 1px solid rgba(255, 255, 255, 0.1); }
-        .btn-step-iso { width: 38px; height: 38px; border-radius: 12px; font-size: 20px; border: 1px solid rgba(0, 242, 255, 0.3); }
-        .btn-cyber-large { border-radius: 14px; padding: 10px 0; flex: 1; font-size: 14px; }
+        .v-slider { -webkit-appearance: none; appearance: none; position: absolute; top: 50%; left: 50%; width: 120px; height: 35px; background: transparent; outline: none; transform: translate(-50%, -50%) rotate(-90deg); margin: 0; z-index: 10; cursor: pointer; }
+        .v-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 0 15px #fff; }
+        .btn-reset-glass { width: 100%; padding: 10px; border-radius: 12px; font-size: 10px; font-weight: 700; letter-spacing: 1px; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .btn-step-iso { width: 42px; height: 42px; border-radius: 12px; font-size: 22px; border: 1px solid rgba(0, 242, 255, 0.3); }
+        .btn-cyber-large { border-radius: 14px; padding: 12px 0; flex: 1; font-size: 15px; }
     </style>
 </head>
 <body>
@@ -202,7 +202,7 @@
         <div class="tempo-panel">
             <div class="tempo-header"><span class="tempo-label">TEMPO</span><div class="tempo-val-wrapper"><span id="t-txt">+0</span>%</div></div>
             <div class="tempo-controls" id="tempo-ctrl-area">
-                <div class="btn-step-col" style="display:flex; flex-direction:column; gap:12px;">
+                <div class="btn-step-col" style="display:flex; flex-direction:column; gap:15px;">
                     <button class="btn-unified btn-step-iso" onmousedown="startAdj(0.01)" ontouchstart="startAdj(0.01)" onmouseup="stopAdj()" ontouchend="stopAdj()">+</button>
                     <button class="btn-unified btn-step-iso" style="padding-bottom:4px;" onmousedown="startAdj(-0.01)" ontouchstart="startAdj(-0.01)" onmouseup="stopAdj()" ontouchend="stopAdj()">-</button>
                 </div>
@@ -211,14 +211,13 @@
                     <input type="range" class="v-slider" id="t-sld" min="0.5" max="1.5" step="0.01" value="1.0">
                 </div>
             </div>
-            <button class="btn-unified btn-reset-glass" style="margin-top:8px;" onclick="resT()">RESET</button>
+            <button class="btn-unified btn-reset-glass" style="margin-top:10px;" onclick="resT()">RESET</button>
         </div>
     </div>
 </div>
 <audio id="audio" playsinline></audio>
 
 <script>
-    /* ロジック維持 */
     const audio = document.getElementById('audio'), pBtn = document.getElementById('p-btn'), pSvg = document.getElementById('p-svg'), tSld = document.getElementById('t-sld');
     let tA = 0, tB = 0, dTarget = null, adjTimer = null;
     let isFsActive = false;
