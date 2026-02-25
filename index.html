@@ -2,221 +2,253 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#030305">
-    <title>ZEFRAM PLAYER NEO - iOS Optimized</title>
-    <meta name="apple-mobile-web-app-title" content="ZPN">
-    <link rel="apple-touch-icon" href="icon.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js')
-      .then(() => console.log('ZPN: Offline Mode Ready'));
-      }
-    </script>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#030305">
+    <title>ZEFRAM PLAYER NEO - iOS Optimized</title>
+    <meta name="apple-mobile-web-app-title" content="ZPN">
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js')
+      .then(() => console.log('ZPN: Offline Mode Ready'));
+      }
+    </script>
     <style>
         :root {
             --neon-blue: #00f2ff;
-            --glass-border: rgba(255, 255, 255, 0.15);
+            --neon-blue-glow: rgba(0, 242, 255, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.12);
             --metal-grad: conic-gradient(from 180deg at 50% 50%, #222, #555, #888, #555, #222);
+            --trans: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         * { -webkit-tap-highlight-color: transparent; outline: none; box-sizing: border-box; }
-        body { background: #030305; color: #fff; margin: 0; padding: 0; font-family: -apple-system, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; position: fixed; width: 100%; height: 100%; }
 
-        @keyframes zefram-breathing {
-            0%, 100% { opacity: 0.3; text-shadow: 0 0 5px var(--neon-blue); }
-            50% { opacity: 1; text-shadow: 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue); }
+        body {
+            background-color: #030305;
+            color: #fff; margin: 0; 
+            padding: 20px 5px 5px 5px; 
+            font-family: var(--font-main);
+            display: flex; justify-content: center; align-items: center; min-height: 100vh;
+            overflow: hidden;
+            touch-action: none;
+            position: fixed; width: 100%; height: 100%;
         }
 
         .player-canvas {
-            width: 94%; max-width: 380px; height: 92vh; margin: 10px 0;
-            background: rgba(15, 15, 25, 0.7); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border); border-radius: 35px; padding: 12px; display: flex; flex-direction: column;
+            width: 100%; max-width: 380px; 
+            height: auto; 
+            max-height: 90vh;
+            background: rgba(15, 15, 25, 0.6); 
+            backdrop-filter: blur(40px) saturate(160%);
+            -webkit-backdrop-filter: blur(40px) saturate(160%);
+            border: 1px solid var(--glass-border); 
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 35px;
+            padding: 15px 15px 15px 15px; 
+            box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 0 30px rgba(255, 255, 255, 0.02);
+            display: flex; flex-direction: column;
+            position: relative;
         }
 
-        .header-title { text-align: center; font-size: 14px; font-weight: 900; color: var(--neon-blue); margin-bottom: 8px; letter-spacing: 2px; animation: zefram-breathing 8s infinite ease-in-out; }
-
-        .btn-base {
-            background: rgba(255,255,255,0.03); border: 1px solid var(--neon-blue); color: var(--neon-blue);
-            font-weight: 800; cursor: pointer; transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+        .dot-fs-trigger {
+            position: absolute; top: 12px; right: 12px; width: 40px; height: 40px;
             display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 1001; background: transparent; border: none;
         }
-        .btn-base:hover { background: rgba(0, 242, 255, 0.1); box-shadow: 0 0 15px var(--neon-blue); border-color: #fff; color: #fff; }
-        .btn-base:active { transform: scale(0.92); background: var(--neon-blue); color: #000; box-shadow: 0 0 30px var(--neon-blue); transition: all 0.05s; }
+        .dot-inner {
+            width: 6px; height: 6px; background: #fff; border-radius: 50%;
+            box-shadow: 0 0 10px #fff, 0 0 20px #fff; transition: var(--trans);
+        }
 
-        .btn-select { border-radius: 6px; height: 22px; width: 45px; font-size: 9px; }
-        .btn-cyber-small { border-radius: 10px; height: 36px; flex: 1; }
-        .btn-tempo-main { width: 85%; height: 38px; border-radius: 10px; font-size: 20px; }
+        .header-title { 
+            text-align: center; font-size: 16px; 
+            font-weight: 900; letter-spacing: 2px; 
+            color: var(--neon-blue); margin-bottom: 8px; text-transform: uppercase; flex-shrink: 0;
+            animation: slow-pulse-glow 5s infinite ease-in-out;
+        }
+        @keyframes slow-pulse-glow {
+            0%, 100% { opacity: 0.3; text-shadow: 0 0 2px var(--neon-blue); }
+            50% { opacity: 1; text-shadow: 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue); }
+        }
 
-        .metal-btn-wrap { width: 66px; height: 66px; border-radius: 50%; background: var(--metal-grad); padding: 3px; cursor: pointer; transition: transform 0.2s; }
-        .metal-btn-wrap:hover { transform: scale(1.05); }
-        .metal-btn-wrap:active { transform: scale(0.9); }
-        .metal-btn-inner { width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #252525, #050505); transition: all 0.2s; }
-        .metal-btn-wrap:hover .metal-btn-inner { box-shadow: inset 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue); }
-        .metal-btn-inner svg { width: 30px; height: 30px; fill: var(--neon-blue); transition: fill 0.2s; }
-        .metal-btn-wrap:hover svg { fill: #fff; }
-
-        @keyframes marquee-left { 0% { transform: translateX(20px); } 100% { transform: translateX(-100%); } }
-        .meta-area { display: flex; align-items: center; gap: 10px; height: 80px; margin-bottom: 8px; flex-shrink: 0; }
-        .art-box { width: 80px; height: 80px; border-radius: 12px; background: #000; border: 1.5px solid rgba(255,255,255,0.1); overflow: hidden; flex-shrink: 0; }
+        .meta-area { display: flex; align-items: center; gap: 10px; flex-shrink: 0; margin-bottom: 5px; height: 85px; }
+        .art-box { 
+            width: 65px; height: 65px; border-radius: 10px; background: #000; 
+            border: 1.5px solid rgba(255, 255, 255, 0.1); 
+            overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+        }
         .art-box img { width: 100%; height: 100%; object-fit: contain; }
-        .info-col { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
-        .scroll-wrapper { width: 100%; overflow: hidden; white-space: nowrap; position: relative; }
-        .scroll-content { display: inline-block; transition: 0.3s; }
-        .is-scrolling { animation: marquee-left 30s linear infinite; padding-right: 100%; }
-        .title-style { font-size: 16px; font-weight: 900; }
-        .artist-style { font-size: 12px; font-weight: 700; color: var(--neon-blue); }
-
-        #m-time { font-size: 13px; font-weight: 900; font-family: 'Menlo', monospace; width: 110px; flex-shrink: 0; }
-        .time-file-row { display: flex; justify-content: space-between; align-items: flex-end; }
-
-        .seek-container { margin-bottom: 8px; padding: 0 20px; flex-shrink: 0; }
-        .tag-lane { height: 26px; position: relative; }
-        .ab-tag { position: absolute; width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid var(--neon-blue); background: #000; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; top: 50%; transform: translate(-50%, -50%); color: var(--neon-blue); z-index: 100; cursor: pointer; transition: box-shadow 0.2s, border-color 0.2s; }
-        .ab-tag:hover { box-shadow: 0 0 15px var(--neon-blue); border-color: #fff; }
-
-        .main-lane { height: 34px; position: relative; display: flex; align-items: center; }
-        .main-lane-bg { position: absolute; width: 100%; height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; }
-        .v-marker { position: absolute; width: 2px; height: 16px; background: rgba(255,255,255,0.8); z-index: 20; top: 50%; transform: translate(-50%, -50%); }
-        .bar-y { position: absolute; height: 5px; background: var(--neon-blue); border-radius: 3px; box-shadow: 0 0 10px var(--neon-blue); }
-        .head-knob { position: absolute; width: 22px; height: 22px; border-radius: 50%; background: #fff; transform: translateX(-50%); box-shadow: 0 0 12px #fff; z-index: 30; }
-
-        .ab-jump-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 8px; flex-shrink: 0; }
-        #ab-txt { color: var(--neon-blue); font-weight: 900; font-size: 15px; font-family: 'Menlo', monospace; width: 140px; text-align: center; }
-
-        .control-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 8px; flex: 1; min-height: 0; }
-        .play-col { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
-
-        /* テンポパネル修正：グリッド構成を変更し、スライダーが上まで伸びるように */
-        .tempo-panel { background: rgba(255,255,255,0.04); border-radius: 20px; padding: 10px; border: 1px solid var(--glass-border); display: grid; grid-template-columns: 1fr 50px; grid-template-rows: 1fr; height: 100%; overflow: hidden; }
         
-        /* 左側：ヘッダーとボタンを縦に並べる */
-        .tempo-left-col { display: flex; flex-direction: column; justify-content: space-between; }
-        .tempo-header { text-align: left; padding-left: 5px; }
-        .tempo-label { font-size: 10px; color: var(--neon-blue); font-weight: 800; display: block; }
-        .tempo-val-wrapper { font-size: 18px; font-weight: 900; font-family: 'Menlo', monospace; }
-        .tempo-btns { display: flex; flex-direction: column; gap: 6px; justify-content: flex-end; align-items: flex-start; margin-bottom: 2px; }
-        
-        /* 右側：スライダー列をTEMPOの横まで完全に伸ばす */
-        .slider-column { position: relative; display: flex; justify-content: center; height: 100%; width: 40px; margin-left: 5px; }
-        .tempo-lane-bg { position: absolute; height: 100%; width: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; }
-        .t-marker { position: absolute; height: 2px; width: 12px; background: rgba(255,255,255,0.4); left: -4px; }
+        .info-col { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
 
+        .marquee-container { width: 100%; overflow: hidden; white-space: nowrap; position: relative; margin: 1px 0; }
+        .marquee-inner { display: inline-flex; width: max-content; align-items: center; }
+        .marquee-content { display: inline-block; white-space: nowrap; }
+        .title-style { font-size: 16px; font-weight: 900; color: #fff; }
+        .artist-style { font-size: 12px; font-weight: 700; color: var(--neon-blue); opacity: 0.8; }
+        .animate-loop { animation: seamless-marquee 25s linear infinite; }
+        @keyframes seamless-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        #m-time { font-family: var(--font-main); font-size: 16px; font-weight: 900; margin-top: 4px; color: #fff; letter-spacing: 1px; font-variant-numeric: tabular-nums; }
+
+        .btn-unified { 
+            background: rgba(255,255,255,0.03); border: 1px solid var(--neon-blue); 
+            color: var(--neon-blue); font-weight: 800; cursor: pointer; transition: var(--trans); 
+            display: inline-flex; align-items: center; justify-content: center; 
+            text-shadow: 0 0 5px var(--neon-blue-glow); box-shadow: 0 0 12px rgba(0, 242, 255, 0.1); 
+            text-align: center; line-height: 1;
+        }
+        .btn-unified:active { transform: scale(0.95); background: rgba(0, 242, 255, 0.2); }
+        .btn-select { border-radius: 8px; height: 30px; width: 50px; font-size: 10px; border: 1px solid rgba(0, 242, 255, 0.5); }
+
+        .seek-container { margin: 2px 0 10px 0; flex-shrink: 0; position: relative; padding: 0 20px; }
+        .tag-lane { height: 28px; position: relative; width: 100%; }
+        .ab-tag { 
+            position: absolute; width: 32px; height: 32px; border-radius: 50%; 
+            background: rgba(0, 242, 255, 0.05); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+            border: 1.2px solid var(--neon-blue); display: flex; align-items: center; justify-content: center; 
+            font-size: 14px; font-weight: 900; top: 50%; transform: translate(-50%, -50%); 
+            color: var(--neon-blue); z-index: 100; box-shadow: 0 0 15px var(--neon-blue-glow); cursor: pointer;
+        }
+
+        .ab-jump-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px; }
+        #ab-txt { 
+            font-family: var(--font-main); color: var(--neon-blue); font-weight: 900; font-size: 17px; 
+            min-width: 140px; text-align: center; text-shadow: 0 0 15px var(--neon-blue-glow); 
+            font-variant-numeric: tabular-nums; letter-spacing: 1px;
+        }
+
+        .main-lane { height: 36px; position: relative; display: flex; align-items: center; cursor: pointer; touch-action: none; }
+        .main-lane-bg { position: absolute; width: 100%; height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; z-index: 1; }
+        .v-marker { position: absolute; width: 2px; height: 16px; background: #fff; z-index: 20; top: 50%; transform: translate(-50%, -50%); pointer-events: none; }
+        .bar-y { position: absolute; height: 5px; background: var(--neon-blue); z-index: 3; box-shadow: 0 0 20px var(--neon-blue); border-radius: 3px; }
+        .bar-w { position: absolute; height: 5px; background: #fff; z-index: 3; opacity: 0.2; border-radius: 3px; }
+        .head-knob { position: absolute; width: 20px; height: 20px; border-radius: 50%; background: #fff; z-index: 30; transform: translateX(-50%); box-shadow: 0 0 15px #fff; pointer-events: none; }
+        
+        .control-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 10px; flex-shrink: 0; margin-bottom: 5px; }
+        .play-col { display: flex; flex-direction: column; align-items: center; justify-content: space-around; padding: 5px 0; }
+        
+        .metal-btn-wrap { 
+            aspect-ratio: 1/1; width: 75px; border-radius: 50%; background: var(--metal-grad); padding: 3px; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.6); cursor: pointer; position: relative; overflow: hidden; 
+            display: flex; align-items: center; justify-content: center; transition: var(--trans);
+        }
+        #p-btn { width: 100px; border: 1.5px solid var(--neon-blue); }
+        #p-btn.playing::before { 
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; 
+            background: conic-gradient(transparent, transparent, var(--neon-blue), transparent); 
+            animation: rotate-glow 2s linear infinite; z-index: 0; 
+        }
+        @keyframes rotate-glow { 100% { transform: rotate(360deg); } }
+        .metal-btn-inner { width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #252525, #050505); position: relative; z-index: 1; }
+        .metal-btn-inner svg { width: 35px; height: 35px; fill: var(--neon-blue); filter: drop-shadow(0 0 8px var(--neon-blue-glow)); }
+        
+        /* 修正：テンポパネルのレイアウトを整理 */
+        .tempo-panel { 
+            background: rgba(255, 255, 255, 0.04); border-radius: 25px; padding: 12px; 
+            border: 1px solid var(--glass-border); display: flex; flex-direction: column; 
+            justify-content: space-between; min-height: 180px; backdrop-filter: blur(10px); 
+        }
+        .tempo-header { flex-shrink: 0; }
+        .tempo-label { font-size: 10px; color: var(--neon-blue); font-weight: 800; letter-spacing: 1px; display: block; margin-bottom: -2px; }
+        .tempo-val-wrapper { color: #fff; font-size: 18px; font-weight: 900; }
+        
+        /* 修正：バーが上まで届くようにエリアを最大化 */
+        .tempo-controls { flex: 1; display: flex; gap: 10px; align-items: center; justify-content: center; position: relative; margin: 5px 0; }
+        
+        .slider-wrapper { position: relative; height: 100%; width: 35px; display: flex; justify-content: center; align-items: center; }
+        
+        /* 修正：芯出しを完全に一致させる */
+        .tempo-lane-bg { position: absolute; height: 100%; width: 5px; background: rgba(255,255,255,0.06); border-radius: 4px; z-index: 1; left: 50%; transform: translateX(-50%); }
+        .t-marker { position: absolute; height: 2px; width: 15px; background: rgba(255,255,255,0.4); z-index: 2; left: 50%; transform: translateX(-50%); }
+        
+        /* 修正：スライダー本体もセンターに固定 */
         .v-slider { 
-            -webkit-appearance: none; appearance: none; 
-            position: absolute; 
-            top: 50%; left: 50%;
-            height: 40px; width: 100%; 
-            background: transparent; 
-            transform: translate(-50%, -50%) rotate(-90deg); 
-            z-index: 20; cursor: pointer; margin: 0; padding: 0;
+            -webkit-appearance: none; appearance: none; position: absolute; top: 50%; left: 50%; 
+            width: 100px; height: 35px; background: transparent; outline: none; 
+            transform: translate(-50%, -50%) rotate(-90deg); margin: 0; z-index: 10; cursor: pointer; 
         }
-        .v-slider::-webkit-slider-thumb { 
-            -webkit-appearance: none; 
-            width: 26px; height: 26px; 
-            border-radius: 50%; background: #fff; 
-            box-shadow: 0 0 15px #fff; border: 2px solid #333;
-        }
+        .v-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 0 15px #fff; }
+        
+        .btn-reset-glass { width: 100%; padding: 10px; border-radius: 12px; font-size: 10px; font-weight: 700; letter-spacing: 1px; border: 1px solid rgba(255, 255, 255, 0.1); flex-shrink: 0; }
+        .btn-step-iso { width: 42px; height: 42px; border-radius: 12px; font-size: 22px; border: 1px solid rgba(0, 242, 255, 0.3); }
+        .btn-cyber-large { border-radius: 14px; padding: 12px 0; flex: 1; font-size: 15px; }
     </style>
 </head>
 <body>
 
 <div class="player-canvas">
-    <div class="header-title">ZEFRAM PLAYER NEO SE</div>
-    
+    <button class="dot-fs-trigger" id="dot-btn"><div class="dot-inner"></div></button>
+    <div class="header-title">ZEFRAM PLAYER NEO</div>
     <div class="meta-area">
         <div id="art-box" class="art-box"></div>
         <div class="info-col">
-            <div class="scroll-wrapper"><div class="scroll-content title-style" id="m-tit">No File</div></div>
-            <div class="scroll-wrapper"><div class="scroll-content artist-style" id="m-art">Select track</div></div>
-            <div class="time-file-row">
-                <div id="m-time">00:00 / 00:00</div>
-                <button class="btn-base btn-select" id="file-trigger">FILE</button>
-            </div>
+            <div class="marquee-container"><div id="wrap-tit" class="marquee-inner"><span id="m-tit" class="marquee-content title-style">No File</span></div></div>
+            <div class="marquee-container"><div id="wrap-art" class="marquee-inner"><span id="m-art" class="marquee-content artist-style">Select track</span></div></div>
+            <div id="m-time">00:00 / 00:00</div>
         </div>
-        <input type="file" id="f-in" hidden accept="audio/*">
+        <button class="btn-unified btn-select" id="file-trigger">FILE</button>
+        <input type="file" id="f-in" hidden accept=".mp3,.m4a,.wav,audio/*">
     </div>
-
     <div class="seek-container" id="seek-cont">
         <div class="tag-lane"><div class="ab-tag" id="tag-a" style="left:0" onmousedown="dragStart(event, 'A')" ontouchstart="dragStart(event, 'A')">A</div></div>
-        <div class="main-lane" onmousedown="dragStart(event, 'P')" ontouchstart="dragStart(event, 'P')">
-            <div class="main-lane-bg">
-                <div id="v-a-mid" class="v-marker" style="left:0"></div>
-                <div id="v-b-mid" class="v-marker" style="left:100%"></div>
-            </div>
-            <div id="bar-y" class="bar-y"></div><div id="head-knob" class="head-knob"></div>
+        <div class="main-lane" id="main-lane-touch" onmousedown="dragStart(event, 'P')" ontouchstart="dragStart(event, 'P')">
+            <div class="main-lane-bg"><div id="v-a-mid" class="v-marker" style="left:0"></div><div id="v-b-mid" class="v-marker" style="left:100%"></div></div>
+            <div id="bar-y" class="bar-y"></div><div id="bar-w" class="bar-w"></div><div id="head-knob" class="head-knob"></div>
         </div>
         <div class="tag-lane"><div class="ab-tag" id="tag-b" style="left:100%" onmousedown="dragStart(event, 'B')" ontouchstart="dragStart(event, 'B')">B</div></div>
     </div>
-
     <div class="ab-jump-row">
-        <button class="btn-base btn-cyber-small" onclick="setPoint('A')">A ▶</button>
+        <button class="btn-unified btn-cyber-large" onclick="setPoint('A')">A ▶</button>
         <div id="ab-txt">00:00 - 00:00</div>
-        <button class="btn-base btn-cyber-small" onclick="setPoint('B')">◀ B</button>
+        <button class="btn-unified btn-cyber-large" onclick="setPoint('B')">◀ B</button>
     </div>
-
     <div class="control-grid">
         <div class="play-col">
-            <div class="metal-btn-wrap" onclick="jump()"><div class="metal-btn-inner"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></div></div>
-            <div class="metal-btn-wrap" id="p-btn"><div class="metal-btn-inner"><svg id="p-svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+            <div class="metal-btn-wrap" onclick="jump('A')"><div class="metal-btn-inner"><svg width="40" height="40" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></div></div>
+            <div class="metal-btn-wrap" id="p-btn"><div class="metal-btn-inner"><svg id="p-svg" width="40" height="40" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
         </div>
-
         <div class="tempo-panel">
-            <div class="tempo-left-col">
-                <div class="tempo-header">
-                    <span class="tempo-label">TEMPO</span>
-                    <div class="tempo-val-wrapper"><span id="t-txt">+0</span>%</div>
+            <div class="tempo-header"><span class="tempo-label">TEMPO</span><div class="tempo-val-wrapper"><span id="t-txt">+0</span>%</div></div>
+            <div class="tempo-controls" id="tempo-ctrl-area">
+                <div class="btn-step-col" style="display:flex; flex-direction:column; gap:15px;">
+                    <button class="btn-unified btn-step-iso" onmousedown="startAdj(0.01)" ontouchstart="startAdj(0.01)" onmouseup="stopAdj()" ontouchend="stopAdj()">+</button>
+                    <button class="btn-unified btn-step-iso" style="padding-bottom:4px;" onmousedown="startAdj(-0.01)" ontouchstart="startAdj(-0.01)" onmouseup="stopAdj()" ontouchend="stopAdj()">-</button>
                 </div>
-                <div class="tempo-btns">
-                    <button class="btn-base btn-tempo-main" onmousedown="startAdj(0.01)" ontouchstart="startAdj(0.01)" onmouseup="stopAdj()" ontouchend="stopAdj()">+</button>
-                    <button class="btn-base btn-tempo-main" onmousedown="startAdj(-0.01)" ontouchstart="startAdj(-0.01)" onmouseup="stopAdj()" ontouchend="stopAdj()">-</button>
-                    <button class="btn-base btn-tempo-main" style="font-size:9px" onclick="resT()">RESET</button>
+                <div class="slider-wrapper">
+                    <div class="tempo-lane-bg" id="t-lane-bg"><div class="t-marker" style="top:0"></div><div class="t-marker" style="top:50%; transform:translate(-50%,-50%)"></div><div class="t-marker" style="bottom:0"></div></div>
+                    <input type="range" class="v-slider" id="t-sld" min="0.5" max="1.5" step="0.01" value="1.0">
                 </div>
             </div>
-            <div class="slider-column" id="s-col">
-                <div class="tempo-lane-bg">
-                    <div class="t-marker" style="top:0"></div><div class="t-marker" style="top:50%"></div><div class="t-marker" style="top:100%"></div>
-                </div>
-                <input type="range" class="v-slider" id="t-sld" min="0.5" max="1.5" step="0.01" value="1.0">
-            </div>
+            <button class="btn-unified btn-reset-glass" onclick="resT()">RESET</button>
         </div>
     </div>
 </div>
-
 <audio id="audio" playsinline></audio>
 
 <script>
     const audio = document.getElementById('audio'), pBtn = document.getElementById('p-btn'), pSvg = document.getElementById('p-svg'), tSld = document.getElementById('t-sld');
     let tA = 0, tB = 0, dTarget = null, adjTimer = null;
-
-    function syncSld() {
-        const h = document.getElementById('s-col').offsetHeight;
-        tSld.style.width = h + 'px';
-    }
-    window.addEventListener('resize', syncSld);
-    window.addEventListener('load', syncSld);
-
-    function updateScroll(el) {
-        el.classList.remove('is-scrolling');
-        if (el.scrollWidth > el.parentElement.offsetWidth) {
-            setTimeout(() => el.classList.add('is-scrolling'), 500);
-        }
-    }
-
-    document.getElementById('file-trigger').onclick = () => document.getElementById('f-in').click();
+    let isFsActive = false;
+    function requestFS() { const el = document.documentElement; if (el.webkitRequestFullscreen) el.webkitRequestFullscreen(); else if (el.requestFullscreen) el.requestFullscreen(); isFsActive = true; }
+    function toggleFS() { const isFull = document.webkitFullscreenElement || document.fullscreenElement; if (!isFull) requestFS(); else { if (document.webkitExitFullscreen) document.webkitExitFullscreen(); else if (document.exitFullscreen) document.exitFullscreen(); isFsActive = false; } }
+    document.getElementById('dot-btn').onclick = (e) => { e.stopPropagation(); toggleFS(); };
+    document.getElementById('file-trigger').onclick = (e) => { e.stopPropagation(); document.getElementById('f-in').click(); };
     document.getElementById('f-in').onchange = (e) => {
         const file = e.target.files[0]; if(!file) return;
-        audio.src = URL.createObjectURL(file); audio.load();
-        audio.onloadedmetadata = () => { tA = 0; tB = audio.duration; updateUI(); syncSld(); };
+        audio.pause(); audio.src = URL.createObjectURL(file); audio.load(); 
+        setupSeamlessLoop('wrap-tit', 'm-tit', file.name, 'title-style');
+        setupSeamlessLoop('wrap-art', 'm-art', "Loading...", 'artist-style');
+        resT(); 
+        audio.onloadedmetadata = () => { tA = 0; tB = audio.duration; audio.currentTime = 0; updateUI(); resizeSlider(); };
         window.jsmediatags.read(file, { onSuccess: (tag) => {
-            const t = document.getElementById('m-tit'), a = document.getElementById('m-art');
-            t.textContent = tag.tags.title || file.name;
-            a.textContent = tag.tags.artist || "Unknown Artist";
-            updateScroll(t); updateScroll(a);
+            setupSeamlessLoop('wrap-tit', 'm-tit', tag.tags.title || file.name, 'title-style');
+            setupSeamlessLoop('wrap-art', 'm-art', tag.tags.artist || "Unknown Artist", 'artist-style');
             if (tag.tags.picture) {
                 const { data, format } = tag.tags.picture;
                 let b64 = ""; for (let i = 0; i < data.length; i++) b64 += String.fromCharCode(data[i]);
@@ -224,50 +256,60 @@
             }
         }});
     };
-
-    function setPoint(type) { if(!audio.duration) return; if(type==='A') tA=audio.currentTime; else tB=audio.currentTime; updateUI(); }
-    
-    function updateUI() {
-        const dur = audio.duration || 1, cur = audio.currentTime, s = Math.min(tA, tB), e = Math.max(tA, tB);
-        if (cur < s) { audio.currentTime = s; }
-        document.getElementById('m-time').textContent = `${fT(cur)} / ${fT(dur)}`;
-        document.getElementById('head-knob').style.left = (cur/dur*100)+'%';
-        document.getElementById('tag-a').style.left = (tA/dur*100)+'%';
-        document.getElementById('tag-b').style.left = (tB/dur*100)+'%';
-        document.getElementById('v-a-mid').style.left = (tA/dur*100)+'%';
-        document.getElementById('v-b-mid').style.left = (tB/dur*100)+'%';
-        document.getElementById('bar-y').style.left = (s/dur*100)+'%';
-        document.getElementById('bar-y').style.width = (Math.max(0, cur-s)/dur*100)+'%';
-        document.getElementById('ab-txt').textContent = `${fT(tA)} - ${fT(tB)}`;
-        if (cur >= e - 0.05 && Math.abs(tA-tB)>0.1) audio.currentTime = s;
+    function setupSeamlessLoop(innerId, contentId, text, extraClass) {
+        const inner = document.getElementById(innerId); const container = inner.parentElement;
+        inner.classList.remove('animate-loop'); inner.innerHTML = '';
+        const mainSpan = document.createElement('span'); mainSpan.className = `marquee-content ${extraClass}`; mainSpan.id = contentId; mainSpan.innerText = text; inner.appendChild(mainSpan);
+        setTimeout(() => { if (mainSpan.offsetWidth > container.offsetWidth) { mainSpan.style.paddingRight = "80px"; const clone = mainSpan.cloneNode(true); inner.appendChild(clone); inner.classList.add('animate-loop'); } else { mainSpan.style.paddingRight = "0"; } }, 100);
     }
-
-    function dragStart(e, type) { dTarget = type; handleMove(e); }
+    function setPoint(type) { if(!audio.duration) return; if(type === 'A') tA = audio.currentTime; else if(type === 'B') tB = audio.currentTime; updateUI(); }
+    function initDefaultPoints() { tA = 0; tB = 100; updateUI(); }
+    audio.ontimeupdate = () => {
+        const cur = audio.currentTime, dur = audio.duration || 1;
+        document.getElementById('m-time').textContent = `${fT(cur)} / ${fT(dur)}`; 
+        document.getElementById('head-knob').style.left = (cur/dur*100)+'%'; 
+        updateUI();
+        const start = Math.min(tA, tB), end = Math.max(tA, tB);
+        if (Math.abs(tA-tB) > 0.1 && (cur >= end - 0.01)) audio.currentTime = start;
+    };
+    function dragStart(e, type) { dTarget = type; handleMove(e); e.preventDefault(); }
     function handleMove(e) {
         if(!dTarget || !audio.duration) return;
         const rect = document.getElementById('seek-cont').getBoundingClientRect();
-        const x = (e.touches?e.touches[0].clientX:e.clientX) - rect.left - 20;
-        let r = Math.max(0, Math.min(1, x/(rect.width-40)));
-        if(dTarget==='P' && r < Math.min(tA, tB)/audio.duration) r = Math.min(tA, tB)/audio.duration;
-        const targetTime = r * audio.duration;
-        if(dTarget==='A') tA = targetTime; else if(dTarget==='B') tB = targetTime; else audio.currentTime = targetTime;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const x = clientX - rect.left - 25;
+        const r = Math.max(0, Math.min(1, x / (rect.width - 50)));
+        if(dTarget === 'A') { tA = r * audio.duration; audio.currentTime = tA; } else if(dTarget === 'B') { tB = r * audio.duration; } else { audio.currentTime = r * audio.duration; }
         updateUI();
     }
-    
-    window.onmousemove = handleMove; window.ontouchmove = handleMove;
-    window.onmouseup = window.ontouchend = () => dTarget = null;
-    audio.ontimeupdate = updateUI;
-    pBtn.onclick = () => { 
-        if(audio.paused) { audio.play(); pSvg.innerHTML='<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; } 
-        else { audio.pause(); pSvg.innerHTML='<path d="M8 5v14l11-7z"/>'; }
-    };
+    function updateUI() {
+        const dur = audio.duration || 100, cur = audio.currentTime; const s = Math.min(tA, tB), e = Math.max(tA, tB);
+        const posA = (tA/dur*100), posB = (tB/dur*100);
+        document.getElementById('tag-a').style.left = posA + '%'; document.getElementById('tag-b').style.left = posB + '%';
+        document.getElementById('v-a-mid').style.left = (Math.min(posA, posB)) + '%'; document.getElementById('v-b-mid').style.left = (Math.max(posA, posB)) + '%';
+        document.getElementById('bar-y').style.left = (s/dur*100)+'%'; document.getElementById('bar-y').style.width = (audio.duration && cur > s ? (Math.min(cur, e)-s)/dur*100 : 0)+'%';
+        document.getElementById('bar-w').style.left = (Math.max(cur, s)/dur*100)+'%'; document.getElementById('bar-w').style.width = (e > cur ? (e-Math.max(cur, s))/dur*100 : 0)+'%';
+        document.getElementById('ab-txt').textContent = audio.duration ? `${fT(tA)} - ${fT(tB)}` : "00:00 - End";
+    }
+    window.addEventListener('mousemove', handleMove); window.addEventListener('touchmove', handleMove, {passive: false});
+    window.addEventListener('mouseup', () => dTarget = null); window.addEventListener('touchend', () => dTarget = null);
     tSld.oninput = () => { audio.playbackRate = tSld.value; document.getElementById('t-txt').textContent = (tSld.value>=1?'+':'')+Math.round((tSld.value-1)*100); };
-    function resT() { tSld.value = 1.0; tSld.oninput(); }
-    function jump() { audio.currentTime = Math.min(tA, tB); }
-    function fT(s) { return `${Math.floor(s/60).toString().padStart(2,'0')}:${Math.floor(s%60).toString().padStart(2,'0')}`; }
-    function startAdj(v) { adjTimer = setInterval(() => { tSld.value = (parseFloat(tSld.value)+v).toFixed(2); tSld.oninput(); }, 50); }
+    function adjT(v) { tSld.value = (parseFloat(tSld.value)+v).toFixed(2); tSld.oninput(); }
+    function startAdj(v) { adjT(v); adjTimer = setInterval(() => adjT(v), 50); }
     function stopAdj() { clearInterval(adjTimer); }
+    function resT() { tSld.value = 1.0; tSld.oninput(); }
+    function jump(m) { audio.currentTime = tA; }
+    pBtn.onclick = () => {
+        if(audio.paused) { audio.play(); pBtn.classList.add('playing'); pSvg.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; }
+        else { audio.pause(); pBtn.classList.remove('playing'); pSvg.innerHTML = '<path d="M8 5v14l11-7z"/>'; }
+    };
+    function fT(s) { return `${Math.floor(s/60).toString().padStart(2,'0')}:${Math.floor(s%60).toString().padStart(2,'0')}`; }
+    function resizeSlider() { 
+        const area = document.getElementById('tempo-ctrl-area'); 
+        if(area) { const h = area.offsetHeight; tSld.style.width = h + 'px'; document.getElementById('t-lane-bg').style.height = h + 'px'; } 
+    }
+    window.onload = () => { initDefaultPoints(); resizeSlider(); };
+    window.onresize = resizeSlider;
 </script>
 </body>
 </html>
-
