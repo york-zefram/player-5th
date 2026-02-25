@@ -136,37 +136,27 @@
         
         .metal-btn-wrap { 
             aspect-ratio: 1/1; width: 75px; border-radius: 50%; background: var(--metal-grad); padding: 3px; 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.6); cursor: pointer; position: relative;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.6); cursor: pointer; position: relative; overflow: hidden; 
             display: flex; align-items: center; justify-content: center; transition: var(--trans);
         }
 
-        /* 再生ボタン - overflowをあえて外し、マスク用のドーナツを置く */
-        #p-btn { width: 100px; border: 1.5px solid var(--neon-blue); }
+        /* 再生ボタン本体 */
+        #p-btn { width: 100px; border: 1.5px solid var(--neon-blue); overflow: hidden; position: relative; }
         
         /* 光る回転リングパーツ */
         .glow-ring {
             position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
             background: conic-gradient(transparent, transparent, var(--neon-blue), transparent);
-            z-index: 0; display: none;
-            border-radius: 50%; /* ここでも丸くしておく */
+            z-index: 0; display: none; /* 通常は非表示 */
         }
         #p-btn.playing .glow-ring {
             display: block;
             animation: rotate-glow 2s linear infinite;
         }
 
-        /* 物理的な「隠し」ドーナツ：ボタンの背景色と同じ色で四角い角を塗りつぶす */
-        .p-mask {
-            position: absolute; top: -10px; left: -10px; width: calc(100% + 20px); height: calc(100% + 20px);
-            pointer-events: none; z-index: 1;
-            /* 中央だけ透明にくり抜かれたドーナツ型SVG */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cpath fill='%23030305' fill-rule='evenodd' d='M0 0h120v120H0V0zm60 10a50 50 0 1 0 0 100 50 50 0 0 0 0-100z'/%3E%3C/svg%3E");
-            background-size: 100% 100%;
-        }
-
         @keyframes rotate-glow { 100% { transform: rotate(360deg); } }
 
-        .metal-btn-inner { width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #252525, #050505); position: relative; z-index: 2; }
+        .metal-btn-inner { width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #252525, #050505); position: relative; z-index: 1; }
         .metal-btn-inner svg { width: 35px; height: 35px; fill: var(--neon-blue); filter: drop-shadow(0 0 8px var(--neon-blue-glow)); }
         
         .tempo-panel { background: rgba(255, 255, 255, 0.04); border-radius: 25px; padding: 12px; border: 1px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between; min-height: 180px; backdrop-filter: blur(10px); }
@@ -216,7 +206,6 @@
             <div class="metal-btn-wrap" onclick="jump('A')"><div class="metal-btn-inner"><svg width="40" height="40" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></div></div>
             <div class="metal-btn-wrap" id="p-btn">
                 <div class="glow-ring"></div>
-                <div class="p-mask"></div>
                 <div class="metal-btn-inner"><svg id="p-svg" width="40" height="40" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
             </div>
         </div>
