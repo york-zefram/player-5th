@@ -31,7 +31,8 @@
         body {
             background-color: #030305;
             color: #fff; margin: 0; 
-            padding: 20px 10px; /* 上下に隙間を確保 */
+            /* 下の余白を少し長めにするため、上側のパディングを調整 */
+            padding: 15px 10px 40px 10px; 
             font-family: var(--font-main);
             display: flex; justify-content: center; align-items: center; 
             min-height: 100vh;
@@ -40,11 +41,10 @@
             position: fixed; width: 100%; height: 100%;
         }
 
-        /* 修正：SE用に高さを調整し、上下にマージンを作る */
         .player-canvas {
             width: 100%; max-width: 380px; 
-            height: 90vh; /* 96vhから90vhに下げて上下に隙間を作成 */
-            max-height: 720px; /* はみ出し防止のため上限を少し下げる */
+            height: 92vh; /* 90vhから92vhへ、少しだけ長く */
+            max-height: 740px; 
             background: rgba(15, 15, 25, 0.6); 
             backdrop-filter: blur(40px) saturate(160%);
             -webkit-backdrop-filter: blur(40px) saturate(160%);
@@ -68,7 +68,7 @@
         }
 
         .header-title { 
-            text-align: center; font-size: 15px; /* 16pxから微調整 */
+            text-align: center; font-size: 15px;
             font-weight: 900; letter-spacing: 2px; 
             color: var(--neon-blue); margin-bottom: 8px; text-transform: uppercase; flex-shrink: 0;
             animation: slow-pulse-glow 5s infinite ease-in-out;
@@ -218,7 +218,7 @@
 <audio id="audio" playsinline></audio>
 
 <script>
-    /* あなたのロジックを完全維持 */
+    /* ロジック維持 */
     const audio = document.getElementById('audio'), pBtn = document.getElementById('p-btn'), pSvg = document.getElementById('p-svg'), tSld = document.getElementById('t-sld');
     let tA = 0, tB = 0, dTarget = null, adjTimer = null;
     let isFsActive = false;
