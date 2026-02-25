@@ -21,12 +21,12 @@
         body {
             background-color: #030305;
             color: #fff; margin: 0; 
-            /* 調整：上のパディングを45pxから15pxへ。これで全体を上に上げました */
-            padding: 15px 5px 5px 5px; 
+            /* 調整：45pxと15pxの間をとって30pxに。これで「ちょうど良い上」を狙います */
+            padding: 30px 5px 5px 5px; 
             font-family: var(--font-main);
             display: flex; justify-content: center; 
-            /* 画面中央寄せではなく上基準で配置 */
-            align-items: flex-start; 
+            /* 調整：極端な上寄せをやめ、中央基準に戻して安定させました */
+            align-items: center; 
             min-height: 100vh;
             overflow: hidden;
             touch-action: none;
@@ -36,7 +36,7 @@
         .player-canvas {
             width: 100%; max-width: 380px; 
             height: auto; 
-            max-height: 95vh;
+            max-height: 92vh;
             background: rgba(15, 15, 25, 0.6); 
             backdrop-filter: blur(40px) saturate(160%);
             -webkit-backdrop-filter: blur(40px) saturate(160%);
@@ -49,7 +49,7 @@
             position: relative;
         }
 
-        /* --- 以下、パーツのレイアウトとロジック（変更なし） --- */
+        /* パーツのレイアウト（変更なし） */
         .dot-fs-trigger { position: absolute; top: 12px; right: 12px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1001; background: transparent; border: none; }
         .dot-inner { width: 6px; height: 6px; background: #fff; border-radius: 50%; box-shadow: 0 0 10px #fff, 0 0 20px #fff; }
         .header-title { text-align: center; font-size: 16px; font-weight: 900; letter-spacing: 2px; color: var(--neon-blue); margin-bottom: 8px; text-transform: uppercase; }
