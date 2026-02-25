@@ -4,60 +4,139 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ZPN">
-    <title>ZPN - Legacy</title>
+    <title>ZPN - Legacy Edition</title>
     <style>
-        /* iOS 9でも動くシンプルなスタイル */
+        /* iOS 9対応：背景のボケ(backdrop-filter)を使わず、色でZEFRAM感を演出 */
         body {
             margin: 0;
-            background-color: #030305;
-            color: #00e5ff;
-            font-family: sans-serif;
+            padding: 0;
+            background-color: #030305; /* ZEFRAMブラック */
+            color: #00e5ff; /* ZEFRAMブルー */
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            overflow: hidden;
+            text-align: center;
         }
-        #play-btn {
-            width: 120px;
-            height: 120px;
-            border-radius: 60px;
-            border: 2px solid #00e5ff;
-            background: none;
+
+        h1 {
+            font-size: 18px;
+            letter-spacing: 4px;
+            margin-bottom: 40px;
+            font-weight: 200;
             color: #00e5ff;
-            font-size: 20px;
+            text-shadow: 0 0 10px #00e5ff;
+        }
+
+        /* 再生ボタン：iOS 9でも綺麗に見えるようシンプルなグラデーション */
+        .play-outer {
+            width: 150px;
+            height: 150px;
+            border-radius: 75px;
+            border: 1px solid #00e5ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
             cursor: pointer;
+            margin-bottom: 30px;
+        }
+
+        #play-status {
+            font-size: 14px;
+            letter-spacing: 2px;
+        }
+
+        /* ファイル選択ボタンのカスタマイズ */
+        .file-label {
+            background-color: transparent;
+            border: 1px solid #00e5ff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            color: #00e5ff;
+            display: inline-block;
+        }
+
+        input[type="file"] {
+            display: none; /* デフォルトのボタンを隠す */
+        }
+
+        .track-name {
+            margin-top: 20px;
+            font-size: 12px;
+            width: 80%;
+            height: 1.5em;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            opacity: 0.7;
         }
     </style>
 </head>
 <body>
 
-    <button id="play-btn">PLAY</button>
-    <input type="file" id="file-input" style="margin-top: 20px;">
-    <audio id="player"></audio>
+    <h1>ZEFRAM PLAYER</h1>
+
+    <div class="play-outer" id="play-trigger">
+        <div id="play-status">SELECT FILE</div>
+    </div>
+
+    <label class="file-label">
+        CHOOSE AUDIO
+        <input type="file" id="file-input" accept="audio/*">
+    </label>
+
+    <div class="track-name" id="track-name">NO TRACK LOADED</div>
+
+    <audio id="audio-player"></audio>
 
     <script>
-        // var を使い、function() で記述する古いスタイル
-        var playBtn = document.getElementById('play-btn');
+        // iOS 9互換のために var と function を使用
+        var player = document.getElementById('audio-player');
         var fileInput = document.getElementById('file-input');
-        var player = document.getElementById('player');
+        var playTrigger = document.getElementById('play-trigger');
+        var playStatus = document.getElementById('play-status');
+        var trackNameDisplay = document.getElementById('track-name');
 
+        // ファイルが選択された時の処理
         fileInput.onchange = function(e) {
             var file = e.target.files[0];
-            var url = URL.createObjectURL(file);
-            player.src = url;
+            if (file) {
+                var url = URL.createObjectURL(file);
+                player.src = url;
+                trackNameDisplay.innerHTML = file.name;
+                playStatus.innerHTML = 'READY';
+                playStatus.style.color = '#00e5ff';
+            }
         };
 
-        playBtn.onclick = function() {
+        // 再生・停止の切り替え
+        playTrigger.onclick = function() {
+            if (!player.src) {
+                alert('先に音楽ファイルを選択してください');
+                return;
+            }
+
             if (player.paused) {
                 player.play();
-                playBtn.innerHTML = 'PAUSE';
+                playStatus.innerHTML = 'PLAYING';
+                playTrigger.style.boxShadow = '0 0 30px rgba(0, 229, 255, 0.6)';
             } else {
                 player.pause();
-                playBtn.innerHTML = 'PLAY';
+                playStatus.innerHTML = 'PAUSED';
+                playTrigger.style.boxShadow = '0 0 20px rgba(0, 229, 255, 0.3)';
             }
+        };
+
+        // 曲が終わったら表示を戻す
+        player.onended = function() {
+            playStatus.innerHTML = 'FINISHED';
         };
     </script>
 </body>
