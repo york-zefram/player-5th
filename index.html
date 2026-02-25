@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="ZPN">
+    <title>ZPN - Legacy</title>
+    <style>
+        /* iOS 9でも動くシンプルなスタイル */
+        body {
+            margin: 0;
+            background-color: #030305;
+            color: #00e5ff;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #play-btn {
+            width: 120px;
+            height: 120px;
+            border-radius: 60px;
+            border: 2px solid #00e5ff;
+            background: none;
+            color: #00e5ff;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="play-btn">PLAY</button>
+    <input type="file" id="file-input" style="margin-top: 20px;">
+    <audio id="player"></audio>
+
+    <script>
+        // var を使い、function() で記述する古いスタイル
+        var playBtn = document.getElementById('play-btn');
+        var fileInput = document.getElementById('file-input');
+        var player = document.getElementById('player');
+
+        fileInput.onchange = function(e) {
+            var file = e.target.files[0];
+            var url = URL.createObjectURL(file);
+            player.src = url;
+        };
+
+        playBtn.onclick = function() {
+            if (player.paused) {
+                player.play();
+                playBtn.innerHTML = 'PAUSE';
+            } else {
+                player.pause();
+                playBtn.innerHTML = 'PLAY';
+            }
+        };
+    </script>
+</body>
+</html>
