@@ -31,7 +31,6 @@
         body {
             background-color: #030305;
             color: #fff; margin: 0; 
-            /* 調整：全体を少し下に下げる */
             padding: 45px 5px 5px 5px; 
             font-family: var(--font-main);
             display: flex; justify-content: center; align-items: center; min-height: 100vh;
@@ -42,16 +41,17 @@
 
         .player-canvas {
             width: 100%; max-width: 380px; 
-            height: 96vh; 
-            max-height: 800px;
+            /* 修正：固定の高さをやめ、中身に合わせて短くなるように変更 */
+            height: auto; 
+            max-height: 90vh;
             background: rgba(15, 15, 25, 0.6); 
             backdrop-filter: blur(40px) saturate(160%);
             -webkit-backdrop-filter: blur(40px) saturate(160%);
             border: 1px solid var(--glass-border); 
             border-top: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 35px;
-            /* 調整：下部のパディングを増やしてTEMPO領域を下に広げる */
-            padding: 15px 15px 50px 15px; 
+            /* 修正：下の余白を最小限(15px)に設定 */
+            padding: 15px 15px 15px 15px; 
             box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 0 30px rgba(255, 255, 255, 0.02);
             display: flex; flex-direction: column;
             position: relative;
@@ -132,7 +132,7 @@
         .bar-w { position: absolute; height: 5px; background: #fff; z-index: 3; opacity: 0.2; border-radius: 3px; }
         .head-knob { position: absolute; width: 20px; height: 20px; border-radius: 50%; background: #fff; z-index: 30; transform: translateX(-50%); box-shadow: 0 0 15px #fff; pointer-events: none; }
         
-        .control-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 10px; flex: 1; min-height: 0; margin-bottom: 5px; }
+        .control-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 10px; flex-shrink: 0; margin-bottom: 5px; }
         .play-col { display: flex; flex-direction: column; align-items: center; justify-content: space-around; padding: 5px 0; }
         
         .metal-btn-wrap { 
@@ -150,14 +150,14 @@
         .metal-btn-inner { width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #252525, #050505); position: relative; z-index: 1; }
         .metal-btn-inner svg { width: 35px; height: 35px; fill: var(--neon-blue); filter: drop-shadow(0 0 8px var(--neon-blue-glow)); }
         
-        .tempo-panel { background: rgba(255, 255, 255, 0.04); border-radius: 25px; padding: 12px; border: 1px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between; height: 100%; backdrop-filter: blur(10px); }
+        .tempo-panel { background: rgba(255, 255, 255, 0.04); border-radius: 25px; padding: 12px; border: 1px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between; min-height: 180px; backdrop-filter: blur(10px); }
         .tempo-label { font-size: 10px; color: var(--neon-blue); font-weight: 800; letter-spacing: 1px; display: block; margin-bottom: -2px; }
         .tempo-val-wrapper { color: #fff; font-size: 18px; font-weight: 900; }
-        .tempo-controls { flex: 1; display: flex; gap: 10px; align-items: center; justify-content: center; position: relative; min-height: 0; }
+        .tempo-controls { flex: 1; display: flex; gap: 10px; align-items: center; justify-content: center; position: relative; min-height: 80px; }
         .slider-wrapper { position: relative; height: 100%; width: 35px; display: flex; justify-content: center; align-items: center; }
         .tempo-lane-bg { position: absolute; height: 100%; width: 5px; background: rgba(255,255,255,0.06); border-radius: 4px; z-index: 1; }
         .t-marker { position: absolute; height: 2px; width: 15px; background: rgba(255,255,255,0.4); z-index: 2; left: 50%; transform: translateX(-50%); }
-        .v-slider { -webkit-appearance: none; appearance: none; position: absolute; top: 50%; left: 50%; width: 120px; height: 35px; background: transparent; outline: none; transform: translate(-50%, -50%) rotate(-90deg); margin: 0; z-index: 10; cursor: pointer; }
+        .v-slider { -webkit-appearance: none; appearance: none; position: absolute; top: 50%; left: 50%; width: 100px; height: 35px; background: transparent; outline: none; transform: translate(-50%, -50%) rotate(-90deg); margin: 0; z-index: 10; cursor: pointer; }
         .v-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 0 15px #fff; }
         .btn-reset-glass { width: 100%; padding: 10px; border-radius: 12px; font-size: 10px; font-weight: 700; letter-spacing: 1px; border: 1px solid rgba(255, 255, 255, 0.1); }
         .btn-step-iso { width: 42px; height: 42px; border-radius: 12px; font-size: 22px; border: 1px solid rgba(0, 242, 255, 0.3); }
@@ -167,9 +167,7 @@
 <body>
 
 <div class="player-canvas">
-    <button class="dot-fs-trigger" id="dot-btn">
-        <div class="dot-inner"></div>
-    </button>
+    <button class="dot-fs-trigger" id="dot-btn"><div class="dot-inner"></div></button>
     <div class="header-title">ZEFRAM PLAYER NEO</div>
     <div class="meta-area">
         <div id="art-box" class="art-box"></div>
@@ -218,48 +216,21 @@
 <audio id="audio" playsinline></audio>
 
 <script>
+    /* ロジックに変更なし */
     const audio = document.getElementById('audio'), pBtn = document.getElementById('p-btn'), pSvg = document.getElementById('p-svg'), tSld = document.getElementById('t-sld');
     let tA = 0, tB = 0, dTarget = null, adjTimer = null;
     let isFsActive = false;
-
-    function requestFS() {
-        const el = document.documentElement;
-        if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-        else if (el.requestFullscreen) el.requestFullscreen();
-        isFsActive = true;
-    }
-
-    function toggleFS() {
-        const isFull = document.webkitFullscreenElement || document.fullscreenElement;
-        if (!isFull) requestFS();
-        else {
-            if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-            else if (document.exitFullscreen) document.exitFullscreen();
-            isFsActive = false;
-        }
-    }
-
+    function requestFS() { const el = document.documentElement; if (el.webkitRequestFullscreen) el.webkitRequestFullscreen(); else if (el.requestFullscreen) el.requestFullscreen(); isFsActive = true; }
+    function toggleFS() { const isFull = document.webkitFullscreenElement || document.fullscreenElement; if (!isFull) requestFS(); else { if (document.webkitExitFullscreen) document.webkitExitFullscreen(); else if (document.exitFullscreen) document.exitFullscreen(); isFsActive = false; } }
     document.getElementById('dot-btn').onclick = (e) => { e.stopPropagation(); toggleFS(); };
     document.getElementById('file-trigger').onclick = (e) => { e.stopPropagation(); document.getElementById('f-in').click(); };
-
     document.getElementById('f-in').onchange = (e) => {
         const file = e.target.files[0]; if(!file) return;
-        audio.pause();
-        audio.src = URL.createObjectURL(file);
-        audio.load(); 
-
+        audio.pause(); audio.src = URL.createObjectURL(file); audio.load(); 
         setupSeamlessLoop('wrap-tit', 'm-tit', file.name, 'title-style');
         setupSeamlessLoop('wrap-art', 'm-art', "Loading...", 'artist-style');
         resT(); 
-        
-        audio.onloadedmetadata = () => { 
-            tA = 0; 
-            tB = audio.duration;
-            audio.currentTime = 0; 
-            updateUI(); 
-            resizeSlider(); 
-        };
-
+        audio.onloadedmetadata = () => { tA = 0; tB = audio.duration; audio.currentTime = 0; updateUI(); resizeSlider(); };
         window.jsmediatags.read(file, { onSuccess: (tag) => {
             setupSeamlessLoop('wrap-tit', 'm-tit', tag.tags.title || file.name, 'title-style');
             setupSeamlessLoop('wrap-art', 'm-art', tag.tags.artist || "Unknown Artist", 'artist-style');
@@ -270,38 +241,14 @@
             }
         }});
     };
-
     function setupSeamlessLoop(innerId, contentId, text, extraClass) {
-        const inner = document.getElementById(innerId); 
-        const container = inner.parentElement;
-        inner.classList.remove('animate-loop'); 
-        inner.innerHTML = '';
-        const mainSpan = document.createElement('span'); 
-        mainSpan.className = `marquee-content ${extraClass}`;
-        mainSpan.id = contentId; 
-        mainSpan.innerText = text; 
-        inner.appendChild(mainSpan);
-        
-        setTimeout(() => { 
-            if (mainSpan.offsetWidth > container.offsetWidth) { 
-                mainSpan.style.paddingRight = "80px";
-                const clone = mainSpan.cloneNode(true); 
-                inner.appendChild(clone); 
-                inner.classList.add('animate-loop'); 
-            } else {
-                mainSpan.style.paddingRight = "0";
-            }
-        }, 100);
+        const inner = document.getElementById(innerId); const container = inner.parentElement;
+        inner.classList.remove('animate-loop'); inner.innerHTML = '';
+        const mainSpan = document.createElement('span'); mainSpan.className = `marquee-content ${extraClass}`; mainSpan.id = contentId; mainSpan.innerText = text; inner.appendChild(mainSpan);
+        setTimeout(() => { if (mainSpan.offsetWidth > container.offsetWidth) { mainSpan.style.paddingRight = "80px"; const clone = mainSpan.cloneNode(true); inner.appendChild(clone); inner.classList.add('animate-loop'); } else { mainSpan.style.paddingRight = "0"; } }, 100);
     }
-
     function setPoint(type) { if(!audio.duration) return; if(type === 'A') tA = audio.currentTime; else if(type === 'B') tB = audio.currentTime; updateUI(); }
-    
-    function initDefaultPoints() {
-        tA = 0;
-        tB = 100;
-        updateUI();
-    }
-
+    function initDefaultPoints() { tA = 0; tB = 100; updateUI(); }
     audio.ontimeupdate = () => {
         const cur = audio.currentTime, dur = audio.duration || 1;
         document.getElementById('m-time').textContent = `${fT(cur)} / ${fT(dur)}`; 
@@ -310,7 +257,6 @@
         const start = Math.min(tA, tB), end = Math.max(tA, tB);
         if (Math.abs(tA-tB) > 0.1 && (cur >= end - 0.01)) audio.currentTime = start;
     };
-
     function dragStart(e, type) { dTarget = type; handleMove(e); e.preventDefault(); }
     function handleMove(e) {
         if(!dTarget || !audio.duration) return;
@@ -318,66 +264,34 @@
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         const x = clientX - rect.left - 25;
         const r = Math.max(0, Math.min(1, x / (rect.width - 50)));
-        if(dTarget === 'A') { tA = r * audio.duration; audio.currentTime = tA; } 
-        else if(dTarget === 'B') { tB = r * audio.duration; } 
-        else { audio.currentTime = r * audio.duration; }
+        if(dTarget === 'A') { tA = r * audio.duration; audio.currentTime = tA; } else if(dTarget === 'B') { tB = r * audio.duration; } else { audio.currentTime = r * audio.duration; }
         updateUI();
     }
-
     function updateUI() {
-        const dur = audio.duration || 100, cur = audio.currentTime; 
-        const s = Math.min(tA, tB), e = Math.max(tA, tB);
-        const posA = (tA/dur*100);
-        const posB = (tB/dur*100);
-        
-        document.getElementById('tag-a').style.left = posA + '%'; 
-        document.getElementById('tag-b').style.left = posB + '%';
-        document.getElementById('v-a-mid').style.left = (Math.min(posA, posB)) + '%';
-        document.getElementById('v-b-mid').style.left = (Math.max(posA, posB)) + '%';
-        
-        document.getElementById('bar-y').style.left = (s/dur*100)+'%'; 
-        document.getElementById('bar-y').style.width = (audio.duration && cur > s ? (Math.min(cur, e)-s)/dur*100 : 0)+'%';
-        document.getElementById('bar-w').style.left = (Math.max(cur, s)/dur*100)+'%'; 
-        document.getElementById('bar-w').style.width = (e > cur ? (e-Math.max(cur, s))/dur*100 : 0)+'%';
-        
+        const dur = audio.duration || 100, cur = audio.currentTime; const s = Math.min(tA, tB), e = Math.max(tA, tB);
+        const posA = (tA/dur*100), posB = (tB/dur*100);
+        document.getElementById('tag-a').style.left = posA + '%'; document.getElementById('tag-b').style.left = posB + '%';
+        document.getElementById('v-a-mid').style.left = (Math.min(posA, posB)) + '%'; document.getElementById('v-b-mid').style.left = (Math.max(posA, posB)) + '%';
+        document.getElementById('bar-y').style.left = (s/dur*100)+'%'; document.getElementById('bar-y').style.width = (audio.duration && cur > s ? (Math.min(cur, e)-s)/dur*100 : 0)+'%';
+        document.getElementById('bar-w').style.left = (Math.max(cur, s)/dur*100)+'%'; document.getElementById('bar-w').style.width = (e > cur ? (e-Math.max(cur, s))/dur*100 : 0)+'%';
         document.getElementById('ab-txt').textContent = audio.duration ? `${fT(tA)} - ${fT(tB)}` : "00:00 - End";
     }
-
-    window.addEventListener('mousemove', handleMove); 
-    window.addEventListener('touchmove', handleMove, {passive: false});
-    window.addEventListener('mouseup', () => dTarget = null); 
-    window.addEventListener('touchend', () => dTarget = null);
-
-    tSld.oninput = () => { 
-        audio.playbackRate = tSld.value; 
-        document.getElementById('t-txt').textContent = (tSld.value>=1?'+':'')+Math.round((tSld.value-1)*100); 
-    };
-
+    window.addEventListener('mousemove', handleMove); window.addEventListener('touchmove', handleMove, {passive: false});
+    window.addEventListener('mouseup', () => dTarget = null); window.addEventListener('touchend', () => dTarget = null);
+    tSld.oninput = () => { audio.playbackRate = tSld.value; document.getElementById('t-txt').textContent = (tSld.value>=1?'+':'')+Math.round((tSld.value-1)*100); };
     function adjT(v) { tSld.value = (parseFloat(tSld.value)+v).toFixed(2); tSld.oninput(); }
     function startAdj(v) { adjT(v); adjTimer = setInterval(() => adjT(v), 50); }
     function stopAdj() { clearInterval(adjTimer); }
     function resT() { tSld.value = 1.0; tSld.oninput(); }
     function jump(m) { audio.currentTime = tA; }
-
     pBtn.onclick = () => {
-        if(audio.paused) { 
-            audio.play(); 
-            pBtn.classList.add('playing'); 
-            pSvg.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; 
-        } else { 
-            audio.pause(); 
-            pBtn.classList.remove('playing'); 
-            pSvg.innerHTML = '<path d="M8 5v14l11-7z"/>'; 
-        }
+        if(audio.paused) { audio.play(); pBtn.classList.add('playing'); pSvg.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; }
+        else { audio.pause(); pBtn.classList.remove('playing'); pSvg.innerHTML = '<path d="M8 5v14l11-7z"/>'; }
     };
     function fT(s) { return `${Math.floor(s/60).toString().padStart(2,'0')}:${Math.floor(s%60).toString().padStart(2,'0')}`; }
     function resizeSlider() { 
         const area = document.getElementById('tempo-ctrl-area'); 
-        if(area) { 
-            const h = area.offsetHeight;
-            tSld.style.width = h + 'px'; 
-            document.getElementById('t-lane-bg').style.height = h + 'px'; 
-        } 
+        if(area) { const h = area.offsetHeight; tSld.style.width = h + 'px'; document.getElementById('t-lane-bg').style.height = h + 'px'; } 
     }
     window.onload = () => { initDefaultPoints(); resizeSlider(); };
     window.onresize = resizeSlider;
